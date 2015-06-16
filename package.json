@@ -1,0 +1,22 @@
+{
+  "name": "picup",
+  "version": "1.0.0",
+  "description": "Not ripping off instagram for kicks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lajj/picup.git"
+  },
+  "author": "LAJJ",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lajj/picup/issues"
+  },
+  "homepage": "https://github.com/lajj/picup",
+  "dependencies": {
+    "hapi": "^8.6.1"
+  }
+}
