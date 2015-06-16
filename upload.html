@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>our page</title>
+  </head>
+  <body>
+    <div id="filename">No files submitted</div>
+    <form id="upload" action="/upload" enctype="multipart/form-data" method="post">
+    <input id="text" type="text" name="title"><br>
+    <input id="file"type="file" name="upload" multiple="multiple"><br>
+    <input type="submit" value="Upload">
+    </form>
+  </body>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script>
+    $("#upload").submit(function(){
+      $("#filename").html("Your file has been uploaded")
+      $("#text").html("")
+      window.stop()
+    })
+
+  </script>
+
+</html>
