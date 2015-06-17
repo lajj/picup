@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/lajj/picup",
   "dependencies": {
-    "hapi": "^8.6.1"
+    "hapi": "^8.6.1",
+    "mongodb": "^2.0.33"
   }
 }
