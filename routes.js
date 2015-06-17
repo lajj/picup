@@ -1,5 +1,6 @@
 var fs = require('fs');
 var Mongo = require("./mongo.js");
+var Hasher = require("./hasher.js");
 
 //used in viewing
 // function resultsToOrderedReplyString(results){
@@ -12,6 +13,7 @@ var Mongo = require("./mongo.js");
 // }
 
 module.exports = [
+  // upload page
   {
     path: '/',
     method: 'GET',
@@ -19,6 +21,46 @@ module.exports = [
       reply.file('upload.html');
     }
   },
+  // sign up page
+  {
+    path: '/signup',
+    method: 'GET',
+    handler: function(request, reply){
+      reply.file('create.html');
+    }
+  },
+  // login page
+  {
+    path: '/login',
+    method: 'GET',
+    handler: function(request, reply){
+      reply.file('login.html');
+    }
+  },
+  // /usersignin path required by login form
+  {
+    path: '/usersignin',
+    method: 'POST',
+    handler: function (request, reply){
+      // public or private, user, comment, time
+    var password=request.payload.password;
+    var user=request.payload.email;
+    Mongo.read({email:user},{passHash:true,_id:false},'users',function(results){
+      var actualHash=results[0].passHash;
+      Hasher.compare(actualHash,password,function (err, isMatch){
+        if (isMatch){
+          console.log('Yippee the hashes match');
+        } else {
+          console.log('hashes do not match');
+        }
+      });
+    });
+
+    //  if true(console.log(true)) // build onto console that sends and authorisation cookie
+      console.log(user,password);
+    }
+  },
+  // /upload path required by upload form
   {
     path: '/upload',
     method: 'POST',
@@ -28,12 +70,41 @@ module.exports = [
       Mongo.insert([insertObj],'pictures');
       },
   },
+  // /createuser path required from createuser form
+  {
+    path: '/createuser',
+    method: 'POST',
+    handler: function (request, reply){
+      if (request.payload.email1!==request.payload.email2 ){
+        reply("Check your emails match");
+        return;
+      } else if (request.payload.password1!==request.payload.password2 ){
+        reply("Check your passwords match");
+        return;
+      } else {
+
+        var insertObj = {
+          email:request.payload.email1,
+          username:request.payload.username,
+          signUpTime:new Date().getTime(),
+          first:request.payload.firstname,
+          last:request.payload.lastname,
+        };
+
+        Hasher.create(request.payload.password1, insertObj, function (err, objWithPass){
+          if(err) {console.log(err);}
+          Mongo.insert([objWithPass],'users');
+        });
+      }
+    }  //check user exists already
+  },
+  // /pics/{picid} path required by /view/{picKey}/{picVal} request
   {
     path: '/pics/{picid}',
     method: 'GET',
     handler: function(request, reply){
       var queryObj={_id : Mongo.ObjectID(request.params.picid)};
-      var projection={title:false,_id:false,time:false,public:false,comment:false};
+      var projection={picBuffer:true,_id:false};
       Mongo.read(queryObj,projection,'pictures',function(results){
         console.log(results);
         var pic=results[0].picBuffer.buffer;
@@ -41,6 +112,7 @@ module.exports = [
       });
     }
   },
+  // /view/{picKey}/{picVal} path required by read keyvalue form
   {
     path: '/view/{picKey}/{picVal}',
     method: 'GET',
@@ -59,6 +131,7 @@ module.exports = [
       });
     }
   },
+  // //recent/{numhours} path required by read time form
   {
     path: '/recent/{numhours}',
     method: 'GET',
@@ -77,6 +150,7 @@ module.exports = [
       });
     }
   },
+  // src files
   {
     method: 'GET',
     path: '/src/{filename}',
@@ -84,6 +158,7 @@ module.exports = [
        reply.file("./src/"+request.params.filename);
     }
   },
+  // generic goes to search photos page (must be changed when we decide on how to work things along with lots of stuff above)
   {
     path: '/{whatever}',
     method: 'GET',
