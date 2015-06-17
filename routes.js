@@ -66,8 +66,14 @@ module.exports = [
     method: 'POST',
     handler: function (request, reply){
       // public or private, user, comment, time
-      var insertObj={title:request.payload.title,picBuffer:request.payload.upload,time:new Date().getTime(),public:request.payload.public,comment:request.payload.comment};
-      Mongo.insert([insertObj],'pictures');
+      var insertObj={
+        title:request.payload.title,
+        picBuffer:request.payload.upload,
+        time:new Date().getTime(),
+        public:request.payload.public,
+        comment:request.payload.comment
+      };
+      Mongo.insert([insertObj],'pictures'); //insert accepts an array of objects so must put teh single object in an array, could put a validator here to check if of right form for the 'pictures collection'
       },
   },
   // /createuser path required from createuser form
