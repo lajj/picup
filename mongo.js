@@ -16,7 +16,7 @@ var mongo = {
 
 	ObjectID: Mongodb.ObjectID,
 	// data an array of objects, callback what you want to do with the array of data, not necessary
-	insert: function (data,folder,callback){
+	insert: function (data,folder){
 		MongoClient.connect(url, function(err, db) {
 			console.log("Connected correctly to server");
 			var collection = db.collection(folder);
@@ -25,15 +25,14 @@ var mongo = {
 			db.close();
 			});
 		});
-		callback(data);
 	},
 
 
-	read: function (query,folder,callback){
+	read: function (query,projection,folder,callback){
 		MongoClient.connect(url, function(err, db) {
 			console.log("Connected correctly to server");
 			var collection = db.collection(folder);
-			collection.find(query).toArray(function(err, docs) {
+			collection.find(query,projection).sort({time:-1}).toArray(function(err, docs) {
 				console.log("Found the following records");
 				db.close();
 				callback(docs);
