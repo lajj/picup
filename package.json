@@ -4,7 +4,7 @@
   "description": "Not ripping off instagram for kicks",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Fix Me!\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,10 @@
   "homepage": "https://github.com/lajj/picup",
   "dependencies": {
     "bcrypt": "^0.8.3",
+    "good": "6.1.4",
+    "good-file": "5.0.1",
     "hapi": "^8.6.1",
-    "mongodb": "^2.0.33"
+    "mongodb": "^2.0.33",
+    "mandrill-api": "~1.0.45"
   }
 }

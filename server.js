@@ -12,6 +12,7 @@ server.connection({
 // Add the routes
 server.route(require('./routes'));
 
+<<<<<<< HEAD
 server.state('data', {
     ttl: null,
     isSecure: true,
@@ -96,7 +97,39 @@ server.route(
         }
     }
 );
+=======
+
+
+var options = {
+    opsInterval: 1000,
+    reporters: [{
+        reporter: require('good-console'),
+        events: { log: '*', response: '*' }
+    }]
+};
+
+
+server.register({
+    register: require('good'),
+    options: options
+}, function (err) {
+
+    if (err) {
+        console.error(err);
+    }
+    else {
+        server.start(function () {
+
+            console.info('Server started at ' + server.info.uri);
+        });
+    }
+});
+
+>>>>>>> 613ac8fbfd2771133b435c8126d095754ad18e8d
 
 
 // Start the server
 server.start();
+
+
+
