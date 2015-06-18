@@ -1,7 +1,7 @@
 var Bcrypt = require('bcrypt');
     SALT_WORK_FACTOR =10;
 
-    hash function for working with bcrypt functions
+//  hash function for working with bcrypt functions
 var hasher = {
 	create: function (password, obj, cb){
     var result;
