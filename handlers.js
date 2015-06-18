@@ -44,7 +44,7 @@ var handlers = {
             }
             Mongo.insert([objWithPass],'users', function(dataInserted){
               Email.sendEmail(dataInserted[0]);
-              reply.file('pleaseValidate.html')
+              reply.file('pleaseValidate.html');
             });
 
           });

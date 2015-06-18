@@ -19,11 +19,14 @@ var app ={
     });
   },
   login: function(email,password,callback){
-    Mongo.read({email:email,validated:true},{passHash:true,_id:false},'users',function(results){
-      var actualHash=results[0].passHash;
-      Hasher.compare(actualHash,password,function (err, isMatch){
-        callback(isMatch);
-      });
+    Mongo.read({email:email},{validated:true,passHash:true,_id:false},'users',function(results){
+      if (results.length===0){return callback(false);} //No matching emails
+      if(!results[0].validated){return callback(false);} // Your email has nto been validated.
+      else {
+        Hasher.compare(results[0].passHash,password,function (err, isMatch){
+          callback(isMatch);
+        });
+      }
     });
   },
 

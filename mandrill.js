@@ -1,7 +1,7 @@
 var mandrill = require("mandrill-api/mandrill");
-var mandrill_client = new mandrill.Mandrill(process.env.SECRET);  
+var mandrill_client = new mandrill.Mandrill(process.env.SECRET);
 
-var email = {}; 
+var email = {};
 
 email.sendEmail = function (userObj) {
 	var data = {
@@ -24,6 +24,6 @@ email.sendEmail = function (userObj) {
 	}, function(e) {
 		console.log("Error " + e.message);
 	});
-}
+};
 
-module.exports = email; 
+module.exports = email;
