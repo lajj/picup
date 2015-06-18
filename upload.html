@@ -10,7 +10,7 @@
     <form id="upload" action="/upload" enctype="multipart/form-data" method="post">
     <input id="titleForm" type="text" name="title" placeholder="Title"><br>
     <input id="commentForm" type="text" name="comment" placeholder="Comments"><br>
-    <input id="file" type="file" name="upload" onchange="previewFile(event)"><br>
+    <input id="file" type="file" name="picBuffer" onchange="previewFile(event)"><br>
     <img height=100px width=100px id="output"/><br>
     <input type="radio" name="public" value=true checked>Public<br>
     <input type="radio" name="public" value=false>Private<br>
