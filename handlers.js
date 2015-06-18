@@ -1,6 +1,7 @@
 var Mongo = require("./mongo.js");
 var Hasher = require("./hasher.js");
 var Validator = require("./validator.js");
+var Email = require('./mandrill.js');
 
 var handlers = {
 
@@ -22,11 +23,11 @@ var handlers = {
     // public or private, user, comment, time
     var insertObj=request.payload;
     insertObj.time=new Date().getTime();
-    Mongo.insert([insertObj],'pictures'); //insert accepts an array of objects so must put teh single object in an array, could put a validator here to check if of right form for the 'pictures collection'
+    Mongo.insert([insertObj],'pictures', function(dataInserted){}); //insert accepts an array of objects so must put teh single object in an array, could put a validator here to check if of right form for the 'pictures collection'
   },
   createuser: function (request, reply){
       var insertObj = request.payload;
-      insertObj.validated = true; //for now! create with false and use an email to send a link to click to validate
+      insertObj.validated = false; //for now! create with false and use an email to send a link to click to validate
       Validator.signUp(insertObj,function(err){
         var password=insertObj.password1; //this code extracts the password and deletes and sets (un)necessary properties respectively
         if(err){console.log(err);}
@@ -38,8 +39,14 @@ var handlers = {
           delete insertObj.password1;
           delete insertObj.password2;
           Hasher.create(password,insertObj,function(err,objWithPass){
-            if(err){console.log(err);}
-            Mongo.insert([objWithPass],'users');
+            if(err){
+              console.log(err);
+            }
+            Mongo.insert([objWithPass],'users', function(dataInserted){
+              Email.sendEmail(dataInserted[0]);
+              reply.file('pleaseValidate.html')
+            });
+
           });
         }
       }); //check user exists already
@@ -83,6 +90,15 @@ var handlers = {
   },
   whatever: function(request, reply){
     reply.file('./src/index.html');
+  },
+  emailvalidate: function(request, reply){
+    var query = {
+      _id: Mongo.ObjectID(request.params.id)
+    }
+    console.log(query);
+    Mongo.update(query,{validated:true},"users",function(){
+      reply("<h1>Congrats</h1>");
+    });
   }
 };
 

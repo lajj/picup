@@ -14,6 +14,7 @@ var app = {
 			collection.insert(data, function(err, result) { // collection insert method comes form the mongodb module and has this form , err and resutl not used here but have a form true false or number inserted (can't remeber check)
 			console.log("Inserted " + data.length + " document(s) into the document collection"); // really should take this number from the result will refactor
 			db.close(); //closes db connection for future use by another client
+			callback(data);
 			});
 		});
 	},
@@ -33,6 +34,23 @@ var app = {
 			});
 		});
 	},
+
+	update: function(query, modificationsObj, folder, callback){
+		MongoClient.connect(url, function (err,db) { // see above comments
+			console.log("Connected correctly to server"); //blah
+			var collection = db.collection(folder); // blah
+			console.log(query);
+			console.log(modificationsObj);
+			collection.update(query,{$set:modificationsObj},{multi:true}, function(err,result){
+				if (err){console.log(err);}
+				else {
+					console.log("Updated " + query._id);
+			        db.close();
+			        callback();
+				}
+			});
+		});
+	}
 };
 
 

@@ -55,6 +55,13 @@ module.exports = [
     path: '/src/{filename}',
     handler: Handlers.getsrcfile
   },
+  
+  {
+    method: 'GET', 
+    path: '/validate/{id}', 
+    handler: Handlers.emailvalidate
+  }, 
+
   // generic goes to search photos page (must be changed when we decide on how to work things along with lots of stuff above)
   {
     path: '/{whatever}',
