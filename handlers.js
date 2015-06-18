@@ -39,11 +39,14 @@ var handlers = {
           delete insertObj.password1;
           delete insertObj.password2;
           Hasher.create(password,insertObj,function(err,objWithPass){
-            if(err){console.log(err);}
+            if(err){
+              console.log(err);
+            }
             Mongo.insert([objWithPass],'users', function(dataInserted){
               Email.sendEmail(dataInserted[0]);
+              reply.file('pleaseValidate.html')
             });
-             
+
           });
         }
       }); //check user exists already
@@ -87,14 +90,14 @@ var handlers = {
   },
   whatever: function(request, reply){
     reply.file('./src/index.html');
-  }, 
+  },
   emailvalidate: function(request, reply){
     var query = {
-      _id: request.param.id
+      _id: Mongo.ObjectID(request.params.id)
     }
     console.log(query);
-    Mongo.update(query, {validated: true}, "users", function(){
-      reply("<h1>Congrats</h1>"); 
+    Mongo.update(query,{validated:true},"users",function(){
+      reply("<h1>Congrats</h1>");
     });
   }
 };
