@@ -6,10 +6,7 @@ var Email = require('./mandrill.js');
 var handlers = {
 
   landing: function(request, reply){
-    reply.file('landing.html');
-  },
-  up: function(request, reply){
-    reply.file('upload.html');
+    reply.file('./src/landing.html');
   },
   usersignin: function (request, reply){
       // public or private, user, comment, time
@@ -44,7 +41,7 @@ var handlers = {
             }
             Mongo.insert([objWithPass],'users', function(dataInserted){
               Email.sendEmail(dataInserted[0]);
-              reply.file('pleaseValidate.html');
+              reply.file('./src/pleaseValidate.html');
             });
 
           });
@@ -94,10 +91,10 @@ var handlers = {
   emailvalidate: function(request, reply){
     var query = {
       _id: Mongo.ObjectID(request.params.id)
-    }
+    };
     console.log(query);
     Mongo.update(query,{validated:true},"users",function(){
-      reply("<h1>Congrats</h1>");
+      reply.file('./src/newlogin.html');
     });
   }
 };

@@ -5,8 +5,6 @@ var email = {};
 
 email.sendEmail = function (userObj) {
 	var data = {
-
-
 	      	'from_email': 'abdicagaros@gmail.com',
 	      	'to': [
 	          {

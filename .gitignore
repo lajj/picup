@@ -28,7 +28,3 @@ node_modules
 
 # ds store
 .DS_Store
-
-# redis
-redis-stable.tar.gz
-redis-stable/

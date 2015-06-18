@@ -3,9 +3,20 @@
   <head>
     <meta charset="utf-8">
     <title>Upload</title>
-    <link rel="stylesheet" href="src/main.css">
+    <link rel="stylesheet" href="/src/main.css">
   </head>
   <body>
+    <div id="filename">No files submitted</div>
+    <form id="upload" action="/upload" enctype="multipart/form-data" method="post">
+    <input id="titleForm" type="text" name="title" placeholder="Title"><br>
+    <input id="commentForm" type="text" name="comment" placeholder="Comments"><br>
+    <input id="file" type="file" name="picBuffer" onchange="previewFile(event)"><br>
+    <img height=100px width=100px id="output"/><br>
+    <input type="radio" name="public" value=true checked>Public<br>
+    <input type="radio" name="public" value=false>Private<br>
+    <input type="submit" onclick="upThanks()" value="Upload"><br>
+    <br>
+    <br>
     <textarea id ="key" name="key" placeholder="key"></textarea>
     <textarea id ="value" type="text" placeholder="value"></textarea>
     <button type="button" onClick="search()" id="searchButton">search</button>

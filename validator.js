@@ -24,7 +24,7 @@ var app ={
       if(!results[0].validated){return callback(false);} // Your email has nto been validated.
       else {
         Hasher.compare(results[0].passHash,password,function (err, isMatch){
-          callback(isMatch);
+          return callback(isMatch);
         });
       }
     });
