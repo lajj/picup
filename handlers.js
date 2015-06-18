@@ -1,11 +1,17 @@
+var Hapi = require('hapi');
 var Mongo = require("./mongo.js");
 var Hasher = require("./hasher.js");
 var Validator = require("./validator.js");
+var Auth = require("hapi-auth-cookie");
+var Server = require("./server.js");
 
 var handlers = {
 
   landing: function(request, reply){
-    reply.file('landing.html');
+    //console.log(request);
+    //console.log(reply);
+    console.log(Server.state);
+    return reply.file('landing.html');
   },
   up: function(request, reply){
     reply.file('upload.html');
@@ -15,7 +21,7 @@ var handlers = {
     var password=request.payload.password;
     var email=request.payload.email;
     Validator.login(email,password,function(isMatch){ //can change callback and validator to pass back more info like user id..
-      console.log(isMatch);
+    console.log(isMatch);
     });
   },
   upload: function (request, reply){

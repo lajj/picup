@@ -17,7 +17,7 @@ module.exports = [
   {
     path: '/usersignin',
     method: 'POST',
-    handler: Handlers.usersignin
+    handler: Handlers.usersignin,
   },
   // /upload path required by upload form
   {
