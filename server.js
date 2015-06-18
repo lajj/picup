@@ -8,7 +8,6 @@ server.connection({
 });
 
 // Add the routes
-
 server.route(require('./routes'));
 
 // Start the server
