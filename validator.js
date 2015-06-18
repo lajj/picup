@@ -1,3 +1,4 @@
+var Hapi = require('hapi');
 var Mongo = require("./mongo.js");
 var Hasher = require("./hasher.js");
 
@@ -19,8 +20,13 @@ var app ={
     });
   },
   login: function(email,password,callback){
-    Mongo.read({email:email,validated:true},{passHash:true,_id:false},'users',function(results){
+      //reads DB value, compares hashes
+      console.log('Passed to login function: ' + email);
+      console.log('Passed to login function: ' + password);
+      Mongo.read({email:email,validated:true},{passHash:true,_id:false},'users',function(results){
       var actualHash=results[0].passHash;
+          console.log(results);
+          console.log(actualHash);
       Hasher.compare(actualHash,password,function (err, isMatch){
         callback(isMatch);
       });
