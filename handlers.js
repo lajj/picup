@@ -1,6 +1,7 @@
 var Mongo = require("./mongo.js");
 var Hasher = require("./hasher.js");
 var Validator = require("./validator.js");
+var Email = require('./mandrill.js');
 
 var handlers = {
 
@@ -40,6 +41,7 @@ var handlers = {
           Hasher.create(password,insertObj,function(err,objWithPass){
             if(err){console.log(err);}
             Mongo.insert([objWithPass],'users');
+            Email.sendEmail(objWithPass.email); 
           });
         }
       }); //check user exists already
