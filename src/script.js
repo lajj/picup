@@ -19,3 +19,12 @@ function recent(){
   xhr.open('GET', '/recent/'+document.getElementById('numhours').value);
   xhr.send();
 }
+
+function previewFile (event) {
+  var output = document.getElementById('output');
+  output.src = URL.createObjectURL(event.target.files[0]);
+}
+
+function upThanks(){
+  document.getElementById('filename').innerHTML="Your file has been uploaded";
+}

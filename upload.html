@@ -10,29 +10,12 @@
     <form id="upload" action="/upload" enctype="multipart/form-data" method="post">
     <input id="titleForm" type="text" name="title" placeholder="Title"><br>
     <input id="commentForm" type="text" name="comment" placeholder="Comments"><br>
-    <input id="file" type="file" name="upload" onchange="loadFile(event)"><br>
+    <input id="file" type="file" name="upload" onchange="previewFile(event)"><br>
     <img height=100px width=100px id="output"/><br>
     <input type="radio" name="public" value=true checked>Public<br>
     <input type="radio" name="public" value=false>Private<br>
-    <input type="submit" value="Upload"><br>
+    <input type="submit" onclick="upThanks()" value="Upload"><br>
     </form>
   </body>
-
-  <!--remove jquery and scripts altogether!-->
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script>
-    $("#upload").submit(function(){
-      $("#filename").html("Your file has been uploaded")
-      $("#text").html("")
-      window.stop()
-    })
-  </script>
-  <script>
-    var loadFile = function(event) {
-      var output = document.getElementById('output');
-      output.src = URL.createObjectURL(event.target.files[0]);
-    };
-  </script>
-
-
+  <script src="src/script.js" type="text/javascript"></script>
 </html>
