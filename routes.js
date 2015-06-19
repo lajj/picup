@@ -5,14 +5,34 @@ module.exports = [
   // /usersignin path required by login form
   {
     path: '/usersignin',
-    method: 'POST',
-    handler: Handlers.usersignin
+    method: ['POST'],
+    config: {
+      handler: Handlers.usersignin,
+      auth: {
+        mode: 'try',
+        strategy:'session'
+      },
+      plugins:{
+        'hapi-auth-cookie': {redirectTo: false}}
+    }
   },
+  {
+    path: '/logout',
+    method: 'GET',
+    config: {
+            handler: Handlers.logout,
+            auth: 'session'
+    }
+  },
+
   // /upload path required by upload form
   {
     path: '/upload',
     method: 'POST',
-    handler: Handlers.upload
+    config: {
+      auth:'session',
+      handler: Handlers.upload
+    }
   },
   // /createuser path required from createuser form
   {

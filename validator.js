@@ -19,12 +19,12 @@ var app ={
     });
   },
   login: function(email,password,callback){
-    Mongo.read({email:email},{validated:true,passHash:true,_id:false},'users',function(results){
-      if (results.length===0){return callback(false);} //No matching emails
-      if(!results[0].validated){return callback(false);} // Your email has nto been validated.
+    Mongo.read({email:email},{username:true,validated:true,passHash:true,_id:false},'users',function(results){
+      if (results.length===0){return callback("No matching emails");} //No matching emails
+      if(!results[0].validated){return callback("Your email has not been validated.");} // Your email has nto been validated.
       else {
         Hasher.compare(results[0].passHash,password,function (err, isMatch){
-          return callback(isMatch);
+          return isMatch ? callback(null,results[0].username) : callback("Passwprd does not match");
         });
       }
     });
