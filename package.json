@@ -21,7 +21,8 @@
     "good": "6.1.4",
     "good-file": "5.0.1",
     "hapi": "^8.6.1",
-    "mongodb": "^2.0.33",
-    "mandrill-api": "~1.0.45"
+    "hapi-auth-cookie": "^3.0.1",
+    "mandrill-api": "~1.0.45",
+    "mongodb": "^2.0.33"
   }
 }

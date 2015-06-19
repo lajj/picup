@@ -21,15 +21,14 @@ var app ={
   },
   login: function(email,password,callback){
       //reads DB value, compares hashes
-      console.log('Passed to login function: ' + email);
-      console.log('Passed to login function: ' + password);
-      Mongo.read({email:email,validated:true},{passHash:true,_id:false},'users',function(results){
-      var actualHash=results[0].passHash;
-          console.log(results);
-          console.log(actualHash);
-      Hasher.compare(actualHash,password,function (err, isMatch){
-        callback(isMatch);
-      });
+    Mongo.read({email:email},{username:true,validated:true,passHash:true,_id:false},'users',function(results){
+      if (results.length===0){return callback("No matching emails");} //No matching emails
+      if(!results[0].validated){return callback("Your email has not been validated.");} // Your email has nto been validated.
+      else {
+        Hasher.compare(results[0].passHash,password,function (err, isMatch){
+          return isMatch ? callback(null,results[0].username) : callback("Passwprd does not match");
+        });
+      }
     });
   },
 

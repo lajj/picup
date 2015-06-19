@@ -5,24 +5,32 @@ var Validator = require("./validator.js");
 
 var Email = require('./mandrill.js');
 
+
 var handlers = {
 
   landing: function(request, reply){
-    //console.log(request);
-    //console.log(reply);
-    console.log(Server.state);
-    return reply.file('landing.html');
-  },
-  up: function(request, reply){
-    reply.file('upload.html');
+    console.log(request.auth);
+    if (request.auth.isAuthenticated) {return reply.redirect("/youaintnologinproceed");}//if you are already logged in no need for landing
+    reply.file('./src/landing.html');
   },
   usersignin: function (request, reply){
       // public or private, user, comment, time
     var password=request.payload.password;
     var email=request.payload.email;
-    Validator.login(email,password,function(isMatch){ //can change callback and validator to pass back more info like user id..
-    console.log(isMatch);
+    Validator.login(email,password,function(err,username){ //can change callback and validator to pass back more info like user id..
+      if(err){return console.log(err);}
+      else {
+          if (err) {console.log("cache set", err);}
+          request.auth.session.set({account:username});
+          return reply.file('./src/index.html');
+      }
     });
+  },
+  logout: function (request,reply){
+    console.log(request.auth);
+    request.auth.session.clear();
+    console.log('hi');
+    return reply.redirect('/');
   },
   upload: function (request, reply){
     // public or private, user, comment, time
@@ -49,7 +57,7 @@ var handlers = {
             }
             Mongo.insert([objWithPass],'users', function(dataInserted){
               Email.sendEmail(dataInserted[0]);
-              reply.file('pleaseValidate.html')
+              reply.file('./src/pleaseValidate.html');
             });
 
           });
@@ -99,10 +107,10 @@ var handlers = {
   emailvalidate: function(request, reply){
     var query = {
       _id: Mongo.ObjectID(request.params.id)
-    }
+    };
     console.log(query);
     Mongo.update(query,{validated:true},"users",function(){
-      reply("<h1>Congrats</h1>");
+      reply.file('./src/newlogin.html');
     });
   }
 };

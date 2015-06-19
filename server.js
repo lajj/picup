@@ -1,4 +1,5 @@
 var Hapi = require('hapi');
+var HapiAuthCookie = require('hapi-auth-cookie');
 
 var Validator = require("./validator.js");
 
@@ -9,10 +10,6 @@ server.connection({
     port: 8000
 });
 
-// Add the routes
-server.route(require('./routes'));
-
-<<<<<<< HEAD
 server.state('data', {
     ttl: null,
     isSecure: true,
@@ -22,114 +19,44 @@ server.state('data', {
     strictHeader: true // don't allow violations of RFC 6265
 });
 
-var home = function (request, reply) {
-
-    reply('<html><head><title>Login page</title></head><body><h3>Welcome '
-      + request.auth.credentials.name
-      + '!</h3><br/><form method="get" action="/logout">'
-      + '<input type="submit" value="Logout">'
-      + '</form></body></html>');
-};
-
-var login2 = function (request, reply) {
-
-    if (request.auth.isAuthenticated) {
-        console.log('authenticated');
-        return reply.redirect('/');
-    }
-
-    var message = '';
-    var account = null;
-
-    if (request.method === 'post') {
-            var password=request.payload.password;
-            var email=request.payload.email;
-        console.log(password);
-        console.log(email);
-            if(Validator.login(email,password,function(isMatch){ //can change callback and validator to pass back more info like user id..
-            console.log("Match up: " + isMatch);
-            })) {
-                account = {id: "jack"};
-            }
-    }
-
-    if (request.method === 'get' ||
-        message) {
-
-        return reply('<html><head><title>Login page</title></head><body>'
-            + (message ? '<h3>' + message + '</h3><br/>' : '')
-            + '<form method="post" action="/cookie">'
-            + 'Email: <input type="text" name="email"><br>'
-            + 'Password: <input type="password" name="password"><br/>'
-            + '<input type="submit" value="Login"></form></body></html>');
-    }
-
-    request.auth.session.set({id: "jack"});
-    return reply.redirect('/cookie');
-};
-
-
-server.register(require('hapi-auth-cookie'), function (err) {
-
-    server.auth.strategy('session', 'cookie', {
-        password: 'password',
+server.register(HapiAuthCookie, function (err) {
+    console.log(server.app.cache);
+    server.auth.strategy('session','cookie',  {
+        password: 'random string to act as hash',
         cookie: 'sid-example',
-        redirectTo: '/cookie',
-        isSecure: false
+        redirectTo: '/',
+        isSecure: false,
     });
-});
 
-server.route(
-    {
-        method: ['GET', 'POST'],
-        path: '/cookie',
-        config: {
-            handler: login2,
-            auth: {
-                mode: 'try',
-                strategy: 'session'
-            },
-            plugins: {
-                'hapi-auth-cookie': {
-                    redirectTo: false
-                }
-            }
+});
+    // Add the routes
+    server.route(require('./routes'));
+
+    var options = {
+        opsInterval: 1000,
+        reporters: [{
+            reporter: require('good-console'),
+            events: { log: '*', response: '*' }
+        }]
+    };
+
+
+    server.register({
+        register: require('good'),
+        options: options
+    }, function (err) {
+
+        if (err) {
+            console.error(err);
         }
-    }
-);
-=======
+        else {
+            server.start(function () {
+
+                console.info('Server started at ' + server.info.uri);
+            });
+        }
+    });
 
 
-var options = {
-    opsInterval: 1000,
-    reporters: [{
-        reporter: require('good-console'),
-        events: { log: '*', response: '*' }
-    }]
-};
-
-
-server.register({
-    register: require('good'),
-    options: options
-}, function (err) {
-
-    if (err) {
-        console.error(err);
-    }
-    else {
-        server.start(function () {
-
-            console.info('Server started at ' + server.info.uri);
-        });
-    }
-});
-
->>>>>>> 613ac8fbfd2771133b435c8126d095754ad18e8d
-
-
-// Start the server
-server.start();
-
-
-
+    // Start the server
+    server.start(function(){console.log('Server started at %s', server.info.uri);});

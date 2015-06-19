@@ -1,29 +1,38 @@
 var Handlers = require("./handlers.js");
 
 module.exports = [
-  // sign up and login form on landing
-  {
-    path: '/',
-    method: 'GET',
-    handler: Handlers.landing
-  },
-  // upload page
-  {
-    path: '/up',
-    method: 'GET',
-    handler: Handlers.up
-  },
+
   // /usersignin path required by login form
   {
     path: '/usersignin',
-    method: 'POST',
-    handler: Handlers.usersignin,
+    method: ['POST'],
+    config: {
+      handler: Handlers.usersignin,
+      auth: {
+        mode: 'try',
+        strategy:'session'
+      },
+      plugins:{
+        'hapi-auth-cookie': {redirectTo: false}}
+    }
   },
+  {
+    path: '/logout',
+    method: 'GET',
+    config: {
+            handler: Handlers.logout,
+            auth: 'session'
+    }
+  },
+
   // /upload path required by upload form
   {
     path: '/upload',
     method: 'POST',
-    handler: Handlers.upload
+    config: {
+      auth:'session',
+      handler: Handlers.upload
+    }
   },
   // /createuser path required from createuser form
   {
@@ -55,12 +64,19 @@ module.exports = [
     path: '/src/{filename}',
     handler: Handlers.getsrcfile
   },
-  
+
   {
-    method: 'GET', 
-    path: '/validate/{id}', 
+    method: 'GET',
+    path: '/validate/{id}',
     handler: Handlers.emailvalidate
-  }, 
+  },
+
+  // sign up and login form on landing
+  {
+    path: '/',
+    method: 'GET',
+    handler: Handlers.landing
+  },
 
   // generic goes to search photos page (must be changed when we decide on how to work things along with lots of stuff above)
   {
