@@ -1,4 +1,7 @@
 var Hapi = require('hapi');
+var HapiAuthCookie = require('hapi-auth-cookie');
+
+var Validator = require("./validator.js");
 
 // Create a server with a host and port
 var server = new Hapi.Server();
@@ -7,40 +10,53 @@ server.connection({
     port: 8000
 });
 
-// Add the routes
-server.route(require('./routes'));
-
-
-
-var options = {
-    opsInterval: 1000,
-    reporters: [{
-        reporter: require('good-console'),
-        events: { log: '*', response: '*' }
-    }]
-};
-
-
-server.register({
-    register: require('good'),
-    options: options
-}, function (err) {
-
-    if (err) {
-        console.error(err);
-    }
-    else {
-        server.start(function () {
-
-            console.info('Server started at ' + server.info.uri);
-        });
-    }
+server.state('data', {
+    ttl: null,
+    isSecure: true,
+    isHttpOnly: true,
+    encoding: 'base64json',
+    clearInvalid: false, // remove invalid cookies
+    strictHeader: true // don't allow violations of RFC 6265
 });
 
+server.register(HapiAuthCookie, function (err) {
+    console.log(server.app.cache);
+    server.auth.strategy('session','cookie',  {
+        password: 'random string to act as hash',
+        cookie: 'sid-example',
+        redirectTo: '/',
+        isSecure: false,
+    });
+
+});
+    // Add the routes
+    server.route(require('./routes'));
+
+    var options = {
+        opsInterval: 1000,
+        reporters: [{
+            reporter: require('good-console'),
+            events: { log: '*', response: '*' }
+        }]
+    };
 
 
-// Start the server
-server.start();
+    server.register({
+        register: require('good'),
+        options: options
+    }, function (err) {
+
+        if (err) {
+            console.error(err);
+        }
+        else {
+            server.start(function () {
+
+                console.info('Server started at ' + server.info.uri);
+            });
+        }
+    });
 
 
-
+    // Start the server
+    server.start(function(){console.log('Server started at %s', server.info.uri);});
