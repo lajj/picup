@@ -10,7 +10,7 @@ var Analytics = require('./analytics.js');
 var handlers = {
 
   landing: function(request, reply){
-    console.log(request.auth);
+//    console.log(request.auth);
     if (request.auth.isAuthenticated) {return reply.redirect("/youaintnologinproceed");}//if you are already logged in no need for landing
     reply.file('./src/landing.html');
   },
@@ -49,9 +49,12 @@ var handlers = {
     // public or private, user, comment, time
     var insertObj=request.payload;
     insertObj.time=new Date().getTime();
+    //insert cookie id into photo Obj
     Mongo.insert([insertObj],'pictures', function(dataInserted){}); //insert accepts an array of objects so must put teh single object in an array, could put a validator here to check if of right form for the 'pictures collection'
   },
   createuser: function (request, reply){
+//      console.log(request);
+//      console.log(request.payload);
       var insertObj = request.payload;
       insertObj.validated = true; //for now! create with false and use an email to send a link to click to validate
       Validator.signUp(insertObj,function(err){

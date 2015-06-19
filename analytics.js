@@ -33,7 +33,7 @@ var analytics = {
 					console.log("new Visitor registered");
 				}
 				else {
-					if (logVisitors[a.source.remoteAddress] > a.timestamp - 300000 ){
+					if (logVisitors[a.source.remoteAddress] > a.timestamp - 30000 ){
 					logVisitors[a.source.remoteAddress] = a.timestamp;
 					console.log("replacing timestamp, last click less than 30 minutes ago");
 					}
@@ -45,6 +45,9 @@ var analytics = {
 			}
 
 			for(var user in logVisitors){
+                console.log("User: " + user);
+                console.log("logVisitors: " + logVisitors);
+                console.log("logVisitors[users]: " + logVisitors[user]);
 				if (logVisitors.hasOwnProperty(user)){
 					var times = logVisitors[user].split(',');
 					returnUserString += '<p><strong> Ip-adress: ' + user + '</strong> has accessed picup.com <i>' + times.length + '</i> times</p>';

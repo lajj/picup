@@ -23,7 +23,6 @@ module.exports = [
             handler: Handlers.logout,
             auth: 'session'
     }
-//    handler: Handlers.up
   },
   // Site analyitcs
     {
@@ -32,11 +31,6 @@ module.exports = [
     handler: Handlers.analytics
   },
   // /usersignin path required by login form
-  {
-    path: '/usersignin',
-    method: 'POST',
-    handler: Handlers.usersignin
-  },
 
   // /upload path required by upload form
   {
