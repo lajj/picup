@@ -6,15 +6,7 @@ module.exports = [
   {
     path: '/usersignin',
     method: ['POST'],
-    config: {
-      handler: Handlers.usersignin,
-      auth: {
-        mode: 'try',
-        strategy:'session'
-      },
-      plugins:{
-        'hapi-auth-cookie': {redirectTo: false}}
-    }
+    handler: Handlers.usersignin,
   },
   {
     path: '/logout',
@@ -23,19 +15,12 @@ module.exports = [
             handler: Handlers.logout,
             auth: 'session'
     }
-//    handler: Handlers.up
   },
   // Site analyitcs
     {
     path: '/analytics',
     method: 'GET',
     handler: Handlers.analytics
-  },
-  // /usersignin path required by login form
-  {
-    path: '/usersignin',
-    method: 'POST',
-    handler: Handlers.usersignin
   },
 
   // /upload path required by upload form
@@ -44,7 +29,7 @@ module.exports = [
     method: 'POST',
     config: {
       auth:'session',
-      handler: Handlers.upload
+      handler: Handlers.upload 
     }
   },
   // /createuser path required from createuser form
@@ -55,21 +40,46 @@ module.exports = [
   },
   // /pics/{picid} path required by /view/{picKey}/{picVal} request
   {
-    path: '/pics/{picid}',
+    path: '/pics/{public}/{username}/{picid}',
     method: 'GET',
-    handler: Handlers.getpic
+    config: {
+      handler: Handlers.getpic,
+      auth: {
+        mode: 'try',
+        strategy:'session'
+      },
+      plugins:{
+        'hapi-auth-cookie': {redirectTo: false}}
+    }
+    //depnd on your user what you get back
   },
   // /view/{picKey}/{picVal} path required by read keyvalue form
   {
     path: '/view/{picKey}/{picVal}',
     method: 'GET',
-    handler: Handlers.keyvaluesearch
+    config: {
+      handler: Handlers.keyvaluesearch,
+      auth: {
+        mode: 'try',
+        strategy:'session'
+      },
+      plugins:{
+        'hapi-auth-cookie': {redirectTo: false}}
+    }
   },
   // //recent/{numhours} path required by read time form
   {
     path: '/recent/{numhours}',
     method: 'GET',
-    handler: Handlers.recentsearch
+    config: {
+      handler: Handlers.recentsearch,
+      auth: {
+        mode: 'try',
+        strategy:'session'
+      },
+      plugins:{
+        'hapi-auth-cookie': {redirectTo: false}}
+    }
   },
   // src files
   {
@@ -88,7 +98,17 @@ module.exports = [
   {
     path: '/',
     method: 'GET',
-    handler: Handlers.landing
+    config: {
+      handler: Handlers.landing,
+      auth: {
+        mode: 'try',
+        strategy:'session'
+      },
+      plugins:{
+        'hapi-auth-cookie': {redirectTo: false}}
+    }
+
+
   },
 
   // generic goes to search photos page (must be changed when we decide on how to work things along with lots of stuff above)

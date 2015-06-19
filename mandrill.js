@@ -5,7 +5,7 @@ var email = {};
 
 email.sendEmail = function (userObj) {
 	var data = {
-	      	'from_email': 'abdicagaros@gmail.com',
+	      	'from_email': 'LAJJ LADS',
 	      	'to': [
 	          {
 	            'email': userObj.email,
@@ -15,7 +15,7 @@ email.sendEmail = function (userObj) {
 	        ],
 		      'autotext': 'true',
 		      'subject': 'Thanks for signing up',
-		      'html': '<p>Thank you '+ userObj.firstname +' have now signed up to ranstagram app on ' +userObj.signUpTime+'. Please validate your email by clicking the following link:</p><a href="localhost:8000/validate/'+ userObj._id+'">Validate</a>'
+		      'html': '<p>Thank you '+ userObj.firstname +' have now signed up to PICUP on ' +userObj.signUpTime+'. Please validate your email by clicking the following link:</p><a href="localhost:8000/validate/'+ userObj._id+'">Validate</a>'
 	};
 	mandrill_client.messages.send({"message": data, "async": false},function(result) {
 		console.log(result);

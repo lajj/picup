@@ -11,7 +11,7 @@ var handlers = {
 
   landing: function(request, reply){
     console.log(request.auth);
-    if (request.auth.isAuthenticated) {return reply.redirect("/youaintnologinproceed");}//if you are already logged in no need for landing
+    if (request.auth.isAuthenticated) {return reply.redirect("/youaintneednologintoproceed");}//if you are already logged in no need for landing
     reply.file('./src/landing.html');
   },
   analytics: function(request, reply){
@@ -34,7 +34,7 @@ var handlers = {
       if(err){return console.log(err);}
       else {
           if (err) {console.log("cache set", err);}
-          request.auth.session.set({account:username});
+          request.auth.session.set({username:username});
           return reply.file('./src/index.html');
       }
     });
@@ -49,11 +49,12 @@ var handlers = {
     // public or private, user, comment, time
     var insertObj=request.payload;
     insertObj.time=new Date().getTime();
+    insertObj.username=request.auth.credentials.username;
     Mongo.insert([insertObj],'pictures', function(dataInserted){}); //insert accepts an array of objects so must put teh single object in an array, could put a validator here to check if of right form for the 'pictures collection'
   },
   createuser: function (request, reply){
       var insertObj = request.payload;
-      insertObj.validated = true; //for now! create with false and use an email to send a link to click to validate
+      insertObj.validated = false; //for now! create with false and use an email to send a link to click to validate
       Validator.signUp(insertObj,function(err){
         var password=insertObj.password1; //this code extracts the password and deletes and sets (un)necessary properties respectively
         if(err){console.log(err);}
@@ -78,6 +79,9 @@ var handlers = {
       }); //check user exists already
   },
   getpic: function (request, reply){
+    if((request.params['public'] === 'false') && (!request.auth.credentials || request.auth.credentials.username !==request.params.username)){
+      return console.log("private pics go away");
+    }
     var queryObj={_id : Mongo.ObjectID(request.params.picid)};
     var projection={picBuffer:true,_id:false};
     Mongo.read(queryObj,projection,'pictures',function(results){
@@ -93,7 +97,9 @@ var handlers = {
     Mongo.read(queryObj,projection,'pictures',function (results){
       console.log(results);
       for (var i=0; i<results.length;i++){
-        replyString += '<img width="100px" height="100px" src = "/pics/' + results[i]._id + '">';
+        if (results[i]['public'] === 'true' || (request.auth.credentials && results[i].username==request.auth.credentials.username)){
+          replyString += '<img width="100px" height="100px" src = "/pics/' + results[i]['public'] + '/' + results[i].username + '/' + results[i]._id + '">';
+        }
       }
       reply(replyString);
     });
@@ -106,7 +112,9 @@ var handlers = {
     Mongo.read(queryObj,projection,'pictures',function (results){
       console.log(results);
       for (var i=0; i<results.length;i++){
-        replyString += '<img width="100px" height="100px" src = "/pics/' + results[i]._id + '">';
+        if (results[i]['public'] === 'true' || (request.auth.credentials && results[i].username==request.auth.credentials.username)){
+          replyString += '<img width="100px" height="100px" src = "/pics/' + results[i]['public'] + '/' + results[i].username + '/' + results[i]._id + '">';
+        }
       }
       reply(replyString);
     });

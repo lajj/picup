@@ -11,14 +11,14 @@ server.connection({
 });
 
 
-server.state('data', {
-    ttl: null,
-    isSecure: true,
-    isHttpOnly: true,
-    encoding: 'base64json',
-    clearInvalid: false, // remove invalid cookies
-    strictHeader: true // don't allow violations of RFC 6265
-});
+// server.state('data', {
+//     ttl: null,
+//     isSecure: true,
+//     isHttpOnly: true,
+//     encoding: 'base64json',
+//     clearInvalid: false, // remove invalid cookies
+//     strictHeader: true // don't allow violations of RFC 6265
+// });
 
 server.register(HapiAuthCookie, function (err) {
     console.log(server.app.cache);

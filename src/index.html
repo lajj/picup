@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="/src/main.css">
   </head>
   <body>
+    <form action="/logout" method="GET">
+      <input type="submit" value="Logout"><br>
+  </form>
+ 
     <div id="filename">No files submitted</div>
     <form id="upload" action="/upload" enctype="multipart/form-data" method="post">
       <input id="titleForm" type="text" name="title" placeholder="Title"><br>
