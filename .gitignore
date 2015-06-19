@@ -28,3 +28,9 @@ node_modules
 
 # ds store
 .DS_Store
+
+# logfiles
+src/log
+
+# data
+data/

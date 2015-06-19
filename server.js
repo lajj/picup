@@ -10,6 +10,7 @@ server.connection({
     port: 8000
 });
 
+
 server.state('data', {
     ttl: null,
     isSecure: true,
@@ -29,18 +30,40 @@ server.register(HapiAuthCookie, function (err) {
     });
 
 });
+
+// Add the routes
+server.route(require('./routes'));
+
+var options = {
+    opsInterval: 1000,
+    reporters: [{
+        reporter: require('good-file'),
+        events: { response: '*'},
+        config: './src/log/response_log'
+
+    },
+    {
+        reporter: require('good-file'),
+        events: { ops: '*' },
+        config: './src/log/ops_log'
+
+    },
+    {
+        reporter: require('good-file'),
+        events: { request: '*' },
+        config: './src/log/request_log'
+
+    },
+    {
+        reporter: require('good-file'),
+        events: { log: '*'},
+        config: './src/log/log_log'
+
+    }]
+};
+
     // Add the routes
-    server.route(require('./routes'));
-
-    var options = {
-        opsInterval: 1000,
-        reporters: [{
-            reporter: require('good-console'),
-            events: { log: '*', response: '*' }
-        }]
-    };
-
-
+   
     server.register({
         register: require('good'),
         options: options
@@ -52,11 +75,11 @@ server.register(HapiAuthCookie, function (err) {
         else {
             server.start(function () {
 
-                console.info('Server started at ' + server.info.uri);
+                console.info('Server started at %s' + server.info.uri);
             });
         }
     });
 
-
-    // Start the server
-    server.start(function(){console.log('Server started at %s', server.info.uri);});
+//
+//    // Start the server
+//    server.start(function(){console.log('Server started at %s', server.info.uri);});
