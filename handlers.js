@@ -40,7 +40,7 @@ var handlers = {
   },
   createuser: function (request, reply){
       var insertObj = request.payload;
-      insertObj.validated = false; //for now! create with false and use an email to send a link to click to validate
+      insertObj.validated = true; //for now! create with false and use an email to send a link to click to validate
       Validator.signUp(insertObj,function(err){
         var password=insertObj.password1; //this code extracts the password and deletes and sets (un)necessary properties respectively
         if(err){console.log(err);}
