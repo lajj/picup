@@ -32,3 +32,6 @@ node_modules
 # redis
 redis-stable.tar.gz
 redis-stable/
+
+# logfiles
+src/log

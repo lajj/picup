@@ -13,6 +13,12 @@ module.exports = [
     method: 'GET',
     handler: Handlers.up
   },
+  // Site analyitcs
+    {
+    path: '/analytics',
+    method: 'GET',
+    handler: Handlers.analytics
+  },
   // /usersignin path required by login form
   {
     path: '/usersignin',

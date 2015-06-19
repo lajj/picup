@@ -2,11 +2,21 @@ var Mongo = require("./mongo.js");
 var Hasher = require("./hasher.js");
 var Validator = require("./validator.js");
 var Email = require('./mandrill.js');
+var Analytics = require('./analytics.js');
 
 var handlers = {
 
   landing: function(request, reply){
     reply.file('landing.html');
+  },
+  analytics: function(request, reply){
+    Analytics.readRequireLog('stuff', function(data, err){
+      if (err){
+        console.log(err);
+      }
+      reply(data);
+    });
+    //reply.file('analytics.html');
   },
   up: function(request, reply){
     reply.file('upload.html');

@@ -15,8 +15,28 @@ server.route(require('./routes'));
 var options = {
     opsInterval: 1000,
     reporters: [{
-        reporter: require('good-console'),
-        events: { log: '*', response: '*' }
+        reporter: require('good-file'),
+        events: { response: '*'},
+        config: './src/log/response_log'
+
+    },
+    {
+        reporter: require('good-file'),
+        events: { ops: '*' },
+        config: './src/log/ops_log'
+
+    },
+    {
+        reporter: require('good-file'),
+        events: { request: '*' },
+        config: './src/log/request_log'
+
+    },
+    {
+        reporter: require('good-file'),
+        events: { log: '*'},
+        config: './src/log/log_log'
+
     }]
 };
 
