@@ -4,6 +4,7 @@ var Hasher = require("./hasher.js");
 var Validator = require("./validator.js");
 
 var Email = require('./mandrill.js');
+var Analytics = require('./analytics.js');
 
 
 var handlers = {
@@ -13,6 +14,18 @@ var handlers = {
     if (request.auth.isAuthenticated) {return reply.redirect("/youaintnologinproceed");}//if you are already logged in no need for landing
     reply.file('./src/landing.html');
   },
+  analytics: function(request, reply){
+    Analytics.readRequireLog('stuff', function(data, err){
+      if (err){
+        console.log(err);
+      }
+      reply(data);
+    });
+    //reply.file('analytics.html');
+  },
+//  up: function(request, reply){
+//    reply.file('upload.html');
+//  },
   usersignin: function (request, reply){
       // public or private, user, comment, time
     var password=request.payload.password;
@@ -40,7 +53,7 @@ var handlers = {
   },
   createuser: function (request, reply){
       var insertObj = request.payload;
-      insertObj.validated = false; //for now! create with false and use an email to send a link to click to validate
+      insertObj.validated = true; //for now! create with false and use an email to send a link to click to validate
       Validator.signUp(insertObj,function(err){
         var password=insertObj.password1; //this code extracts the password and deletes and sets (un)necessary properties respectively
         if(err){console.log(err);}
